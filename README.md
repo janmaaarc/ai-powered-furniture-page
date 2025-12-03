@@ -5,7 +5,7 @@ This project is a modern web application that allows users to generate unique fu
 ## Features
 
 *   **Intuitive UI:** A clean and simple form to select furniture options from dropdown menus.
-*   **Dynamic AI Content:** Interfaces with an AI backend (e.g., an n8n workflow) via a webhook to generate custom designs on the fly.
+*   **Dynamic AI Content:** Interfaces with an n8n workflow powered by Gemini to generate custom designs on the fly.
 *   **Responsive Design:** The user interface is fully responsive and works seamlessly on both desktop and mobile devices.
 *   **Modern User Experience:** Features a sleek card-based layout, smooth animations, and clear loading states to provide an engaging user experience.
 *   **Asynchronous Operations:** Utilizes modern JavaScript (async/await) for non-blocking API calls, ensuring the UI remains fast and responsive while waiting for the AI to generate a design.
@@ -15,7 +15,7 @@ This project is a modern web application that allows users to generate unique fu
 1.  The user selects their desired furniture attributes from the form on the main page.
 2.  Upon clicking "Generate," the application sends the form data as a JSON payload to a predefined webhook URL.
 3.  The UI transitions to a loading state, displaying an animation while it awaits the response.
-4.  A backend workflow (powered by a service like n8n) receives the data, processes it using an AI model, and returns an HTML snippet containing the generated design.
+4.  A backend workflow (powered by n8n) receives the data, processes it using the Gemini AI model, and returns an HTML snippet containing the generated design.
 5.  The frontend receives the HTML and dynamically injects it into the result container for the user to view.
 
 ## Getting Started
@@ -53,4 +53,4 @@ To get this project running on your local machine for development and testing, f
 *   **PHP**
 *   **HTML5 & CSS3:** Custom Properties (Variables), Flexbox, and Keyframe Animations
 *   **JavaScript (ES6+):** DOM Manipulation, Fetch API, and Async/Await
-*   **n8n (Backend):** For workflow automation and AI integration.
+*   **n8n & Gemini (Backend):** For workflow automation and AI-powered content generation.
