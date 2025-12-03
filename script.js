@@ -52,8 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return; // Stop the function here
         }
 
-        // --- IMPORTANT: Replace with your n8n Webhook URL ---
-        const webhookUrl = 'https://janmaaarc.app.n8n.cloud/webhook/generate-furniture';
+        // The webhook URL is sourced from config.js, which is not committed to Git.
+        const webhookUrl = window.N8N_WEBHOOK_URL;
 
         const formData = new FormData(furnitureForm);
         const data = Object.fromEntries(formData.entries());

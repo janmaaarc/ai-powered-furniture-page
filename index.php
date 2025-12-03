@@ -23,7 +23,7 @@
                             <div class="input-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 11h20"/><path d="M3 11v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6"/><path d="M4 18v-2"/><path d="M20 18v-2"/></svg>
                             </div>
-                            <label for="furniturez_type" class="form-label">Choose a furniture type:</label>
+                            <label for="furniture_type" class="form-label">Choose a furniture type:</label>
                             <select id="furniture_type" name="furniture_type" class="form-select" required>
                                 <option value="" disabled selected>Please select a type</option>
                                 <option value="Sofa">Sofa</option>
@@ -88,6 +88,7 @@
         </div>
     </div>
 
+    <script src="config.js"></script>
     <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 

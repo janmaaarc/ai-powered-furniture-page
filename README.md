@@ -37,11 +37,12 @@ To get this project running on your local machine for development and testing, f
     ```
 
 2.  **Configure the Webhook URL:**
-    Open the `script.js` file and locate the `webhookUrl` constant. Replace the placeholder URL with your actual backend webhook URL.
+    Open the `script.js` file. The webhook URL is set near the top of the `handleFormSubmit` function. For development, you can modify the fallback URL directly. For production, it is recommended to manage this via environment variables.
 
     ```javascript
-    // --- IMPORTANT: Replace with your n8n Webhook URL ---
-    const webhookUrl = 'YOUR_N8N_WEBHOOK_URL_HERE';
+    // Best practice: Use an environment variable for the webhook URL if available.
+    // You can create a config.js file for this in a real application.
+    const webhookUrl = window.N8N_WEBHOOK_URL || 'YOUR_N8N_WEBHOOK_URL_HERE';
     ```
 
 3.  **Run the application:**
