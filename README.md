@@ -32,7 +32,7 @@ To get this project running on your local machine for development and testing, f
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/YOUR_USERNAME/ai-powered-furniture.git
+    git clone https://github.com/janmarccoloma/ai-powered-furniture.git
     cd ai-powered-furniture
     ```
 
@@ -49,7 +49,7 @@ To get this project running on your local machine for development and testing, f
     If you are using the Live Server extension in VS Code, simply right-click the `index.html` file and select "Open with Live Server". Otherwise, serve the project directory with your preferred local server.
     If you are using a local server with PHP support like XAMPP or MAMP, place the project in the web root and navigate to it in your browser. For VS Code, the "PHP Server" extension is a good alternative to "Live Server" for `.php` files.
 
-## 💻 Technologies Used
+## Technologies Used
 
 *   **PHP**
 *   **HTML5 & CSS3:** Custom Properties (Variables), Flexbox, and Keyframe Animations
