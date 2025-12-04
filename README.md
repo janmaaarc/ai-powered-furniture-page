@@ -24,7 +24,7 @@ A dynamic web application that allows users to generate a custom furniture landi
     - Instead of calling the n8n webhook directly (which would expose the URL and cause CORS errors), the JavaScript sends a `fetch` request to a local PHP script: `generate.php`.
     - The user's selections are sent as a JSON payload in the request body.
  
-3.  **Server-Side Proxy Logic (`generate.php`):**
+3.  **Server-Side Proxy Logic (`generate.php`):** 
     - This PHP script acts as a secure backend proxy.
     - It retrieves the secret n8n webhook URL from a server environment variable (for production) or a local `config.local.php` file (for development).
     - It uses **cURL** to forward the exact request from the client to the actual n8n webhook.
@@ -36,7 +36,7 @@ A dynamic web application that allows users to generate a custom furniture landi
  
 5.  **Response Handling & Dynamic Rendering:**
     - The `generate.php` proxy receives the HTML response from n8n and echoes it back to the client-side JavaScript.
-    - The `fetch` call in `script.js` resolves, and the received HTML is dynamically injected into the result container, instantly displaying the generated page to the user.
+    - The `fetch` call resolves, and the received HTML is dynamically injected into the result container, instantly displaying the generated page to the user.
  
 ---
  
@@ -95,14 +95,15 @@ echo $response;
 
 ## File Structure
 
-```
-├── index.php               # Main PHP file that renders the application UI.
-├── generate.php            # Server-side proxy to securely handle n8n webhook calls.
-├── script.js               # Handles form submission and UI updates.
-├── style.css               # Custom CSS for styling the application.
+```text
+├── .gitignore              # Specifies intentionally untracked files to ignore.
+├── 01-main.config          # AWS Elastic Beanstalk configuration for deployment.
+├── README.md               # You are here!
 ├── config.example.php      # Example configuration for local development.
-├── config.local.php        # (Untracked) Your local webhook URL configuration.
-└── README.md               # You are here!
+├── generate.php            # Server-side proxy to securely handle n8n webhook calls.
+├── index.php               # Main PHP file that renders the application UI.
+├── script.js               # Handles form submission and UI updates.
+└── style.css               # Custom CSS for styling the application.
 ```
 
 ---
