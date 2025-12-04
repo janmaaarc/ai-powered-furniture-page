@@ -82,7 +82,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error sending data to n8n:', error);
-            ui.result.innerHTML = `<p style="text-align:center; color:red; padding: 40px;">An error occurred while generating the page. Please try again later.</p>`;
+            // Temporarily display the detailed error in the UI for debugging
+            const errorMessage = `An error occurred while generating the page. Please try again later.<br><br><small style="color: #6c757d;">Debug Info: ${error.message}</small>`;
+            ui.result.innerHTML = `<p style="text-align:center; color:red; padding: 40px;">${errorMessage}</p>`;
             setButtonLoadingState(false);
             showView('result');
         }
