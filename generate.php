@@ -28,8 +28,17 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 ]);
 
 $response = curl_exec($ch);
-$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+// Check for cURL errors (e.g., network issues, DNS failures)
+if ($response === false) {
+    http_response_code(502); // Bad Gateway
+    echo "Proxy error: Could not connect to the AI service. Details: " . curl_error($ch);
+    curl_close($ch);
+    exit;
+}
+
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 
-http_response_code($httpcode);
+http_response_code($httpCode);
 echo $response;
