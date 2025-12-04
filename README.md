@@ -57,7 +57,7 @@ A dynamic web application that lets users generate custom furniture landing page
 ### Local Development Setup:
 ```bash
 # 1. Clone the repository
-git clone https://github.com/janmaaarc/ai-powered-furniture-page.git
+git clone https://github.com/janmaaarc/ai-furniture-designer.git
 cd ai-powered-furniture
 
 # 2. Create local configuration from the example
