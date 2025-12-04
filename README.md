@@ -1,80 +1,116 @@
 # AI Furniture Designer
+ 
+A dynamic web application that allows users to generate a custom furniture landing page using AI. Users select their preferences for furniture type, budget, and style, and the application communicates with an AI backend (n8n and Gemini) to produce a unique, visually appealing webpage.
+ 
+---
+ 
+## Objectives
+ 
+- Architect a client-server application with a PHP frontend and a server-side proxy.
+- Interface with an external AI service (n8n/Gemini) for dynamic content generation.
+- Solve Cross-Origin Resource Sharing (CORS) issues using a secure server-side proxy pattern.
+- Hide sensitive API keys and webhook URLs from the client-side code.
+- Implement a seamless, responsive user experience with clear loading states and asynchronous operations.
+ 
+---
+ 
+## Steps & Architecture
+ 
+1.  **Frontend UI & Data Capture:**
+    - The user interacts with a responsive form (`index.php`) built with HTML5 and Bootstrap.
+    - Client-side JavaScript (`script.js`) captures the user's selections for furniture type, budget, and style upon form submission.
+ 
+2.  **Client-Side Request to Proxy:**
+    - Instead of calling the n8n webhook directly (which would expose the URL and cause CORS errors), the JavaScript sends a `fetch` request to a local PHP script: `generate.php`.
+    - The user's selections are sent as a JSON payload in the request body.
+ 
+3.  **Server-Side Proxy Logic (`generate.php`):**
+    - This PHP script acts as a secure backend proxy.
+    - It retrieves the secret n8n webhook URL from a server environment variable (for production) or a local `config.local.php` file (for development).
+    - It uses **cURL** to forward the exact request from the client to the actual n8n webhook.
+ 
+4.  **n8n Workflow & AI Generation:**
+    - The n8n workflow is triggered by the webhook call from the proxy.
+    - It takes the user's preferences, passes them to the Gemini AI model, and instructs it to generate a complete HTML landing page.
+    - The workflow returns the raw HTML as the response.
+ 
+5.  **Response Handling & Dynamic Rendering:**
+    - The `generate.php` proxy receives the HTML response from n8n and echoes it back to the client-side JavaScript.
+    - The `fetch` call in `script.js` resolves, and the received HTML is dynamically injected into the result container, instantly displaying the generated page to the user.
+ 
+---
+ 
+## Commands & Code Snippet
+ 
+### Local Development Setup:
+```bash
+# 1. Clone the repository
+git clone https://github.com/janmaaarc/ai-powered-furniture-page.git
+cd ai-powered-furniture
 
-A dynamic web application that allows users to generate a custom furniture landing page using AI. Users select their preferences for furniture type, budget, and style, and the application communicates with an AI backend via an n8n webhook to produce a unique, visually appealing webpage.
+# 2. Create local configuration from the example
+cp config.example.php config.local.php
 
-![AI Furniture Designer Screenshot](https://user-images.githubusercontent.com/12345/placeholder.png)
+# 3. (Edit config.local.php to add your webhook URL)
 
-## Features
+# 4. Run the local PHP server
+php -S localhost:8000
+```
 
-*   **Intuitive UI:** A clean and simple form to select furniture options from dropdown menus.
-*   **Dynamic AI Content:** Interfaces with an n8n workflow powered by Gemini to generate custom designs on the fly.
-*   **Responsive Design:** The user interface is fully responsive and works seamlessly on both desktop and mobile devices.
-*   **Modern User Experience:** Features a sleek card-based layout, smooth animations, and clear loading states to provide an engaging user experience.
-*   **Asynchronous Operations:** Utilizes the Fetch API and async/await for non-blocking API calls, ensuring the UI remains fast and responsive.
+### Key PHP Logic (Server-Side Proxy):
+This script is the core of the backend, securely forwarding requests to the AI service.
+```php
+// /generate.php
 
-## How It Works
+// Retrieve the secret webhook URL from a server environment or local file
+$webhookUrl = getenv('N8N_WEBHOOK_URL') ?: (require 'config.local.php');
 
-1.  The user selects their desired furniture attributes from the form on the main page.
-2.  Upon clicking "Generate," the application sends the form data as a JSON payload to a predefined webhook URL.
-3.  The UI transitions to a loading state, displaying an animation while it awaits the response.
-4.  A backend workflow (powered by n8n) receives the data, processes it using the Gemini AI model, and returns an HTML snippet containing the generated design.
-5.  The frontend receives the HTML and dynamically injects it into the page for the user to view.
+// Get the raw POST data from the client-side JavaScript
+$clientData = file_get_contents('php://input');
 
-## Getting Started
+// Forward the request to the n8n webhook using cURL
+$ch = curl_init($webhookUrl);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $clientData);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: text/plain']);
 
-To get this project running on your local machine for development and testing, follow these steps.
+$response = curl_exec($ch);
+$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
 
-### Prerequisites
+// Echo the response from n8n directly back to the client
+http_response_code($httpcode);
+echo $response;
+```
 
-*   A local web server environment that can run PHP.
-    *   [XAMPP](https://www.apachefriends.org/index.html) (Windows, macOS, Linux)
-    *   [MAMP](https://www.mamp.info/en/mamp/) (macOS, Windows)
-    *   PHP's built-in web server
-*   An active backend workflow (e.g., on n8n) with a webhook trigger that is configured to accept JSON data and return an HTML response.
+---
 
-### Installation
+## Notes / Lessons Learned
+- **CORS & Security:** Directly calling a third-party webhook from the client is insecure and often blocked by browser CORS policies. The server-side proxy pattern is a robust solution that solves both problems by hiding the secret URL and ensuring all requests originate from the same domain.
+- **Environment Variables:** Using `getenv()` for production and a local `.php` config file for development is a standard, flexible practice for managing sensitive data like API keys and URLs.
+- **Asynchronous UX:** The combination of `async/await` in JavaScript and a responsive proxy ensures the UI remains active and provides clear feedback to the user during the AI generation process, which can take several seconds.
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/janmaaarc/ai-powered-furniture-page.git
-    cd ai-powered-furniture
-    ```
-
-2.  **Configure the Webhook URL:**
-    Copy the example configuration file `config.example.php` to a new file named `config.local.php`. This file is ignored by Git to keep your webhook URL private.
-
-    ```bash
-    cp config.example.php config.local.php
-    ```
-
-    Then, edit `config.local.php` and replace the placeholder with your actual n8n webhook URL.
-
-3.  **Run the application:**
-    Navigate to the project directory in your terminal and start the PHP built-in server:
-    ```sh
-    php -S localhost:8000
-    ```
-    Alternatively, place the project folder in the `htdocs` or `www` directory of your XAMPP or MAMP installation and start the Apache server.
-
-4.  **Open the Application:**
-    Open your web browser and navigate to `http://localhost:8000`.
-
-## Technologies Used
-
-*   **Frontend:**
-    *   **HTML5 & CSS3:** For structure and styling, featuring Custom Properties, Flexbox, and Keyframe Animations.
-    *   **JavaScript (ES6+):** For client-side logic, including DOM manipulation, form handling, and asynchronous API calls using the Fetch API and `async/await`.
-*   **Backend & Workflow:**
-    *   **n8n & Gemini:** For the AI-powered backend, handling workflow automation and content generation.
-*   **Development Environment:**
-    *   **PHP:** Used via its built-in web server (`php -S`) for local development and serving the application.
+---
 
 ## File Structure
 
 ```
-├── index.php         # Main PHP file that renders the initial HTML and form.
-├── style.css         # Custom CSS for styling the application.
-├── script.js         # Handles form submission, AJAX calls, and UI updates.
-├── config.js         # (Untracked) Stores the n8n webhook URL.
-└── README.md         # You are here!
+├── index.php               # Main PHP file that renders the application UI.
+├── generate.php            # Server-side proxy to securely handle n8n webhook calls.
+├── script.js               # Handles form submission and UI updates.
+├── style.css               # Custom CSS for styling the application.
+├── config.example.php      # Example configuration for local development.
+├── config.local.php        # (Untracked) Your local webhook URL configuration.
+└── README.md               # You are here!
 ```
+
+---
+
+## Screenshots
+
+### Architecture Diagram
+![Architecture Diagram](images/architecture-diagram.png)
+
+### Application UI
+![pplication UI](images/ui.png)
