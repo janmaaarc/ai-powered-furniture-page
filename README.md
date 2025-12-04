@@ -111,7 +111,7 @@ echo $response;
 ## Screenshots
 
 ### Architecture Diagram
-![Architecture Diagram](images/architecture-diagram.png)
+![Architecture Diagram](images/ai_furniture_architecture.png)
 
 ### Application UI
 ![pplication UI](images/ui.png)
