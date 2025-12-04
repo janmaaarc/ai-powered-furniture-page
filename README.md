@@ -1,6 +1,8 @@
-# AI-Powered Furniture Generator
+# AI Furniture Designer
 
-This project is a modern web application that allows users to generate unique furniture designs using AI. Users can select a furniture type, style, and material from a simple form, and the application interfaces with a backend workflow to generate and display the result.
+A dynamic web application that allows users to generate a custom furniture landing page using AI. Users select their preferences for furniture type, budget, and style, and the application communicates with an AI backend via an n8n webhook to produce a unique, visually appealing webpage.
+
+![AI Furniture Designer Screenshot](https://user-images.githubusercontent.com/12345/placeholder.png)
 
 ## Features
 
@@ -8,7 +10,7 @@ This project is a modern web application that allows users to generate unique fu
 *   **Dynamic AI Content:** Interfaces with an n8n workflow powered by Gemini to generate custom designs on the fly.
 *   **Responsive Design:** The user interface is fully responsive and works seamlessly on both desktop and mobile devices.
 *   **Modern User Experience:** Features a sleek card-based layout, smooth animations, and clear loading states to provide an engaging user experience.
-*   **Asynchronous Operations:** Utilizes modern JavaScript (async/await) for non-blocking API calls, ensuring the UI remains fast and responsive while waiting for the AI to generate a design.
+*   **Asynchronous Operations:** Utilizes the Fetch API and async/await for non-blocking API calls, ensuring the UI remains fast and responsive.
 
 ## How It Works
 
@@ -16,7 +18,7 @@ This project is a modern web application that allows users to generate unique fu
 2.  Upon clicking "Generate," the application sends the form data as a JSON payload to a predefined webhook URL.
 3.  The UI transitions to a loading state, displaying an animation while it awaits the response.
 4.  A backend workflow (powered by n8n) receives the data, processes it using the Gemini AI model, and returns an HTML snippet containing the generated design.
-5.  The frontend receives the HTML and dynamically injects it into the result container for the user to view.
+5.  The frontend receives the HTML and dynamically injects it into the page for the user to view.
 
 ## Getting Started
 
@@ -24,34 +26,54 @@ To get this project running on your local machine for development and testing, f
 
 ### Prerequisites
 
-*   A modern web browser (e.g., Chrome, Firefox, Safari).
-*   A local web server to serve the project files. The [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) extension for Visual Studio Code is an excellent choice.
+*   A local web server environment that can run PHP.
+    *   [XAMPP](https://www.apachefriends.org/index.html) (Windows, macOS, Linux)
+    *   [MAMP](https://www.mamp.info/en/mamp/) (macOS, Windows)
+    *   PHP's built-in web server
 *   An active backend workflow (e.g., on n8n) with a webhook trigger that is configured to accept JSON data and return an HTML response.
 
 ### Installation
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/janmarccoloma/ai-powered-furniture.git
+    git clone https://github.com/your-username/ai-powered-furniture.git
     cd ai-powered-furniture
     ```
 
 2.  **Configure the Webhook URL:**
-    Open the `script.js` file. The webhook URL is set near the top of the `handleFormSubmit` function. For development, you can modify the fallback URL directly. For production, it is recommended to manage this via environment variables.
+    Create a new file named `config.js` in the root of the project. This file is intentionally ignored by Git (via `.gitignore`) to keep your webhook URL private. Add the following content, replacing the placeholder with your actual n8n webhook URL:
 
     ```javascript
-    // Best practice: Use an environment variable for the webhook URL if available.
-    // You can create a config.js file for this in a real application.
-    const webhookUrl = window.N8N_WEBHOOK_URL || 'YOUR_N8N_WEBHOOK_URL_HERE';
+    // /config.js
+    window.N8N_WEBHOOK_URL = 'https://your-n8n-instance.com/webhook/your-webhook-id';
     ```
 
 3.  **Run the application:**
-    If you are using the Live Server extension in VS Code, simply right-click the `index.html` file and select "Open with Live Server". Otherwise, serve the project directory with your preferred local server.
-    If you are using a local server with PHP support like XAMPP or MAMP, place the project in the web root and navigate to it in your browser. For VS Code, the "PHP Server" extension is a good alternative to "Live Server" for `.php` files.
+    Navigate to the project directory in your terminal and start the PHP built-in server:
+    ```sh
+    php -S localhost:8000
+    ```
+    Alternatively, place the project folder in the `htdocs` or `www` directory of your XAMPP or MAMP installation and start the Apache server.
+
+4.  **Open the Application:**
+    Open your web browser and navigate to `http://localhost:8000`.
 
 ## Technologies Used
 
-*   **PHP**
-*   **HTML5 & CSS3:** Custom Properties (Variables), Flexbox, and Keyframe Animations
-*   **JavaScript (ES6+):** DOM Manipulation, Fetch API, and Async/Await
-*   **n8n & Gemini (Backend):** For workflow automation and AI-powered content generation.
+*   **Frontend:**
+    *   **HTML5 & CSS3:** For structure and styling, featuring Custom Properties, Flexbox, and Keyframe Animations.
+    *   **JavaScript (ES6+):** For client-side logic, including DOM manipulation, form handling, and asynchronous API calls using the Fetch API and `async/await`.
+*   **Backend & Workflow:**
+    *   **n8n & Gemini:** For the AI-powered backend, handling workflow automation and content generation.
+*   **Development Environment:**
+    *   **PHP:** Used via its built-in web server (`php -S`) for local development and serving the application.
+
+## File Structure
+
+```
+├── index.php         # Main PHP file that renders the initial HTML and form.
+├── style.css         # Custom CSS for styling the application.
+├── script.js         # Handles form submission, AJAX calls, and UI updates.
+├── config.js         # (Untracked) Stores the n8n webhook URL.
+└── README.md         # You are here!
+```

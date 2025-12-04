@@ -1,43 +1,27 @@
 <?php
-$furniture_types = [
-    "Sofa", "Chair", "Coffee Table", "Dining Table", "Bed", "Bookshelf", "Desk"
+$config = [
+    'furniture_types' => [
+        "Sofa", "Chair", "Coffee Table", "Dining Table", "Bed", "Bookshelf", "Desk"
+    ],
+    'prices' => [
+        "₱5,000 - ₱15,000",
+        "₱15,001 - ₱30,000",
+        "₱30,001 - ₱50,000",
+        "₱50,001+"
+    ],
+    'styles' => [
+        "Modern", "Minimalist", "Scandinavian", "Industrial", "Bohemian"
+    ]
 ];
 
-$prices = [
-    "₱5,000 - ₱15,000",
-    "₱15,001 - ₱30,000",
-    "₱30,001 - ₱50,000",
-    "₱50,001+"
-];
-
-$styles = [
-    "Modern", "Minimalist", "Scandinavian", "Industrial", "Bohemian"
-];
-
-$errors = [];
-$submitted_type = '';
-$submitted_price = '';
-$submitted_style = '';
-
-// Handle form submission and perform server-side validation
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $submitted_type = $_POST['furniture_type'] ?? '';
-    $submitted_price = $_POST['price'] ?? '';
-    $submitted_style = $_POST['style'] ?? '';
-
-    if (empty($submitted_type) || !in_array($submitted_type, $furniture_types)) {
-        $errors['furniture_type'] = 'Please select a valid furniture type.';
+function generate_options(array $options, string $selectedValue = ''): void {
+    foreach ($options as $option) {
+        $encodedOption = htmlspecialchars($option, ENT_QUOTES, 'UTF-8');
+        $selected = ($selectedValue === $option) ? 'selected' : '';
+        echo "<option value=\"{$encodedOption}\" {$selected}>{$encodedOption}</option>";
     }
-    if (empty($submitted_price) || !in_array($submitted_price, $prices)) {
-        $errors['price'] = 'Please select a valid price range.';
-    }
-    if (empty($submitted_style) || !in_array($submitted_style, $styles)) {
-        $errors['style'] = 'Please select a valid style.';
-    }
-
-    // If there are no errors, you would proceed with the AI generation logic.
-    // For now, the script will just re-render the form with selected values.
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -59,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-container" id="form-container">
                     <h1 class="card-title text-center serif-title">AI Furniture Designer</h1>
                     <p class="card-subtitle text-center text-muted mb-5">Fill out the details below to generate your custom furniture page.</p>
-                    <form id="furniture-form" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                    <form id="furniture-form" novalidate>
                         <div class="mb-4 input-group-icon">
                             <div class="input-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 11h20"/><path d="M3 11v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6"/><path d="M4 18v-2"/><path d="M20 18v-2"/></svg>
@@ -67,13 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <label for="furniture_type" class="form-label">Choose a furniture type:</label>
                             <select id="furniture_type" name="furniture_type" class="form-select" required>
                                 <option value="" disabled selected>Please select a type</option>
-                                <?php foreach ($furniture_types as $type): ?>
-                                    <option value="<?php echo htmlspecialchars($type); ?>" <?php if ($submitted_type === $type) echo 'selected'; ?>>
-                                        <?php echo htmlspecialchars($type); ?>
-                                    </option>
-                                <?php endforeach; ?>
+                                <?php generate_options($config['furniture_types']); ?>
                             </select>
-                            <?php if (isset($errors['furniture_type'])): ?><div class="text-danger mt-1"><small><?php echo $errors['furniture_type']; ?></small></div><?php endif; ?>
                         </div>
                         <div class="mb-4 input-group-icon">
                             <div class="input-icon">
@@ -82,13 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <label for="price" class="form-label">What is your approximate budget?</label>
                             <select id="price" name="price" class="form-select" required>
                                 <option value="" disabled selected>Please select a budget</option>
-                                <?php foreach ($prices as $price): ?>
-                                    <option value="<?php echo htmlspecialchars($price); ?>" <?php if ($submitted_price === $price) echo 'selected'; ?>>
-                                        <?php echo htmlspecialchars($price); ?>
-                                    </option>
-                                <?php endforeach; ?>
+                                <?php generate_options($config['prices']); ?>
                             </select>
-                            <?php if (isset($errors['price'])): ?><div class="text-danger mt-1"><small><?php echo $errors['price']; ?></small></div><?php endif; ?>
                         </div>
                         <div class="mb-4 input-group-icon">
                             <div class="input-icon">
@@ -97,13 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <label for="style" class="form-label">Describe the style you prefer.</label>
                             <select id="style" name="style" class="form-select" required>
                                 <option value="" disabled selected>Please select a style</option>
-                                <?php foreach ($styles as $style): ?>
-                                    <option value="<?php echo htmlspecialchars($style); ?>" <?php if ($submitted_style === $style) echo 'selected'; ?>>
-                                        <?php echo htmlspecialchars($style); ?>
-                                    </option>
-                                <?php endforeach; ?>
+                                <?php generate_options($config['styles']); ?>
                             </select>
-                            <?php if (isset($errors['style'])): ?><div class="text-danger mt-1"><small><?php echo $errors['style']; ?></small></div><?php endif; ?>
                         </div>
                         <button type="submit" id="generate-btn" class="btn btn-primary btn-lg w-100 mt-4 cta-button">
                             <span class="btn-text">Generate My Landing Page</span>
