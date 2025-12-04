@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error sending data to n8n:', error);
             const userMessage = `An error occurred while generating the page. Please try again later.`;
             ui.result.innerHTML = `<p style="text-align:center; color:red; padding: 40px;">${userMessage}</p>`;
+        } finally {
             setButtonLoadingState(false);
             showView('result');
         }
@@ -85,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const resetForm = () => {
         furnitureForm.reset();
-        setButtonLoadingState(false);
         showView('form');
     };
 
